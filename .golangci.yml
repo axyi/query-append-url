@@ -1,0 +1,33 @@
+run:
+  timeout: 5m
+  skip-dirs:
+    - mock
+
+linters:
+  disable-all: true
+  enable:
+    - asciicheck
+    - govet
+    - errcheck
+    - staticcheck
+    - unused
+    - typecheck
+    - gocognit
+    - gocritic
+    - gci
+    - revive
+
+linters-settings:
+  gci:
+    local-prefixes: gitlab.profintel.ru/virtual_pbx/rest-api-golang
+  gocognit:
+    min-complexity: 200
+  revive:
+    ignore-generated-header: true
+    severity: warning
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - revive

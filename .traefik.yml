@@ -1,0 +1,7 @@
+displayName: Add URL to query params
+type: middleware
+import: github.com/axyi/traefik-query-append-url
+summary: Add query URL to query params
+testData:
+  QueryParamName: url
+
