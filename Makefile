@@ -18,4 +18,4 @@ yaegi_test:
 dep: ## Get the dependencies
 	go mod download
 
-.DEFAULT_GOAL := build
+.DEFAULT_GOAL := lint

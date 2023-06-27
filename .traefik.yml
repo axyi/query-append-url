@@ -4,4 +4,5 @@ import: github.com/axyi/traefik-query-append-url
 summary: Add query URL to query params
 testData:
   QueryParamName: url
-
+  QueryScheme: http
+  QueryHost: localhost
