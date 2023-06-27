@@ -38,8 +38,8 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" || req.Method == "" {
 		qry := req.URL.Query()
-		url := fmt.Sprintf("%s://%s%s", req.URL.Scheme, req.URL.Host, req.URL.Path)
-		qry.Add(q.config.QueryParamName, url)
+		_ = fmt.Sprintf("%s://%s%s", req.URL.Scheme, req.URL.Host, req.URL.Path)
+		qry.Add(q.config.QueryParamName, req.URL.Path)
 		req.URL.RawQuery = qry.Encode()
 		req.RequestURI = req.URL.RequestURI()
 		q.next.ServeHTTP(rw, req)
