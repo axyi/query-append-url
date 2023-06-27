@@ -16,6 +16,13 @@ func TestAddQueryParam_NoPrevious(t *testing.T) {
 	assertQueryModification(t, cfg, "", expected)
 }
 
+func TestAddQueryParam_EmptyQueryParamName(t *testing.T) {
+	cfg := traefikqueryappendurl.CreateConfig()
+	expected := "url=http%3A%2F%2Flocalhost%2Ftest"
+
+	assertQueryModification(t, cfg, "", expected)
+}
+
 func TestAddQueryParam_OtherPrevious(t *testing.T) {
 	cfg := traefikqueryappendurl.CreateConfig()
 	cfg.QueryParamName = "url"
