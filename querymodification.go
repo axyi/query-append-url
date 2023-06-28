@@ -40,8 +40,8 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" || req.Method == "" {
 		qry := req.URL.Query()
-		if req.URL.Hostname() != "" && q.config.QueryHost == "" {
-			q.config.QueryHost = req.URL.Hostname()
+		if req.Header.Get("Host") != "" && q.config.QueryHost == "" {
+			q.config.QueryHost = req.Header.Get("Host")
 		} else if q.config.QueryHost == "" {
 			q.config.QueryHost = "localhost"
 		}
