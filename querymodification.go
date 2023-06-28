@@ -31,10 +31,7 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 		config.QueryParamName = "url"
 	}
 	if config.QueryScheme == "" {
-		config.QueryScheme = "http"
-	}
-	if config.QueryHost == "" {
-		config.QueryHost = "localhost"
+		config.QueryScheme = "https"
 	}
 	return &QueryModification{
 		next:   next,
@@ -46,6 +43,11 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" || req.Method == "" {
 		qry := req.URL.Query()
+		if req.URL.Hostname() != "" && q.config.QueryHost == "" {
+			q.config.QueryHost = req.URL.Hostname()
+		} else if q.config.QueryHost == "" {
+			q.config.QueryHost = "localhost"
+		}
 		url := fmt.Sprintf("%s://%s%s", q.config.QueryScheme, q.config.QueryHost, req.URL.Path)
 		qry.Add(q.config.QueryParamName, url)
 		req.URL.RawQuery = qry.Encode()

@@ -12,7 +12,16 @@ import (
 func TestAddQueryParam_NoPrevious(t *testing.T) {
 	cfg := traefikqueryappendurl.CreateConfig()
 	cfg.QueryParamName = "url"
+	cfg.QueryScheme = "http"
 	expected := "url=http%3A%2F%2Flocalhost%2Ftest"
+
+	assertQueryModification(t, cfg, "", expected)
+}
+
+func TestAddQueryParam_NoScheme(t *testing.T) {
+	cfg := traefikqueryappendurl.CreateConfig()
+	cfg.QueryParamName = "url"
+	expected := "url=https%3A%2F%2Flocalhost%2Ftest"
 
 	assertQueryModification(t, cfg, "", expected)
 }
@@ -20,6 +29,7 @@ func TestAddQueryParam_NoPrevious(t *testing.T) {
 func TestAddQueryParam_EmptyQueryParamName(t *testing.T) {
 	cfg := traefikqueryappendurl.CreateConfig()
 	expected := "url=http%3A%2F%2Flocalhost%2Ftest"
+	cfg.QueryScheme = "http"
 
 	assertQueryModification(t, cfg, "", expected)
 }
@@ -27,6 +37,7 @@ func TestAddQueryParam_EmptyQueryParamName(t *testing.T) {
 func TestAddQueryParam_OtherPrevious(t *testing.T) {
 	cfg := traefikqueryappendurl.CreateConfig()
 	cfg.QueryParamName = "url"
+	cfg.QueryScheme = "http"
 	expected := "a=b&url=http%3A%2F%2Flocalhost%2Ftest"
 	previous := "a=b"
 
@@ -36,6 +47,7 @@ func TestAddQueryParam_OtherPrevious(t *testing.T) {
 func TestAddQueryParam_AddPrevious(t *testing.T) {
 	cfg := traefikqueryappendurl.CreateConfig()
 	cfg.QueryParamName = "newparam"
+	cfg.QueryScheme = "http"
 	expected := "newparam=oldvalue&newparam=http%3A%2F%2Flocalhost%2Ftest"
 	previous := "newparam=oldvalue"
 
@@ -45,6 +57,7 @@ func TestAddQueryParam_AddPrevious(t *testing.T) {
 func TestAddQueryParam_Previous(t *testing.T) {
 	cfg := traefikqueryappendurl.CreateConfig()
 	cfg.QueryParamName = "newparam"
+	cfg.QueryScheme = "http"
 	expected := "a=b&newparam=http%3A%2F%2Flocalhost%2Ftest"
 	previous := "a=b"
 

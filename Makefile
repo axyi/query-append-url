@@ -1,11 +1,11 @@
 PROJECT_NAME := fastagi_server
 APP_NAME ?= fast-agi
 
-.PHONY: all dep build clean test lint cover
-all: build
+.PHONY: all lint fmt test cover yaegi_test dep
+all: fmt lint test cover
 
 lint:
-	golangci-lint run
+	golangci-lint run --fix
 fmt:
 	gofmt -s -w ./
 test: ## Run data race detector
@@ -18,4 +18,4 @@ yaegi_test:
 dep: ## Get the dependencies
 	go mod download
 
-.DEFAULT_GOAL := lint
+.DEFAULT_GOAL := all
