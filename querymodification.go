@@ -30,9 +30,6 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 	if config.QueryParamName == "" {
 		config.QueryParamName = "url"
 	}
-	if config.QueryScheme == "" {
-		config.QueryScheme = "https"
-	}
 	return &QueryModification{
 		next:   next,
 		name:   name,
@@ -47,6 +44,11 @@ func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request)
 			q.config.QueryHost = req.URL.Hostname()
 		} else if q.config.QueryHost == "" {
 			q.config.QueryHost = "localhost"
+		}
+		if req.Header.Get("X-Forwarded-Proto") != "" && q.config.QueryScheme == "" {
+			q.config.QueryScheme = req.Header.Get("X-Forwarded-Proto")
+		} else if q.config.QueryScheme == "" {
+			q.config.QueryScheme = "https"
 		}
 		url := fmt.Sprintf("%s://%s%s", q.config.QueryScheme, q.config.QueryHost, req.URL.Path)
 		qry.Add(q.config.QueryParamName, url)
