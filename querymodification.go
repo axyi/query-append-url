@@ -39,18 +39,25 @@ func New(ctx context.Context, next http.Handler, config *Config, name string) (h
 
 func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	if req.Method == "GET" || req.Method == "" {
+
+		hostName := q.config.QueryHost
+		if hostName == "" {
+			hostName = req.Header.Get("Host")
+		}
+		if hostName == "" {
+			hostName = "localhost"
+		}
+
+		scheme := q.config.QueryScheme
+		if scheme == "" {
+			scheme = req.Header.Get("X-Forwarded-Proto")
+		}
+		if scheme == "" {
+			scheme = "http"
+		}
+
+		url := fmt.Sprintf("%s://%s%s", scheme, hostName, req.URL.Path)
 		qry := req.URL.Query()
-		if req.Header.Get("Host") != "" && q.config.QueryHost == "" {
-			q.config.QueryHost = req.Header.Get("Host")
-		} else if q.config.QueryHost == "" {
-			q.config.QueryHost = "localhost"
-		}
-		if req.Header.Get("X-Forwarded-Proto") != "" && q.config.QueryScheme == "" {
-			q.config.QueryScheme = req.Header.Get("X-Forwarded-Proto")
-		} else if q.config.QueryScheme == "" {
-			q.config.QueryScheme = "https"
-		}
-		url := fmt.Sprintf("%s://%s%s", q.config.QueryScheme, q.config.QueryHost, req.URL.Path)
 		qry.Add(q.config.QueryParamName, url)
 		req.URL.RawQuery = qry.Encode()
 		req.RequestURI = req.URL.RequestURI()
