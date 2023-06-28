@@ -42,7 +42,7 @@ func (q *QueryModification) ServeHTTP(rw http.ResponseWriter, req *http.Request)
 
 		hostName := q.config.QueryHost
 		if hostName == "" {
-			hostName = req.Header.Get("Host")
+			hostName = req.Header.Get("X-Forwarded-Host")
 		}
 		if hostName == "" {
 			hostName = "localhost"
